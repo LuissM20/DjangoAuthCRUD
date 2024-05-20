@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="container">
+    <div class="row">
+       <div class="col-md-6 offset-md-3">
+        <h1 class="text-center display-3 py-2">Tasks</h1>
+
+<ul class="list-group ">
+    {% for task in tasks %}
+    <a class="list-group-item" href="{% url 'task_detail' task.id %}">
+            <header class="d-flex justify-content-between">
+                {% if task.important %}
+                    <h2 class="fw-bold text-success">
+                        {{task.title|upper}} 
+                    </h2>
+                {% else %}
+                    <h2 class="fw-bold ">
+                        {{task.title|upper}} 
+                    </h2>
+                {% endif %}
+                <p>{{task.user.username|upper}}</p>
+            </header>
+            
+            <p>
+                {{task.description}}
+            </p>
+            {% if task.datecompleted %}
+            <p>Tarea completada el: {{task.datecompleted}}</p>
+            {% endif %}  
+            <div class="d-flex justify-content-end">
+                <form style="margin-right: 5px;" action="{% url 'complete_task' task.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-success">Complete</button>
+                </form>
+                <form style="margin-right: 5px;" action="{% url 'delete_task' task.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+                <form style="margin-right: 5px;" action="{% url 'task_detail' task.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-primary">Edit</button>
+                </form>
+            </div>
+            
+            </a>
+    {% endfor %}
+</ul>
+       </div>
+    </div>
+</main>
+
+{% endblock %}
